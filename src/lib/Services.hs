@@ -2,8 +2,8 @@
 
 module Services where
 
-import ApiType
-import Data
+import ApiTypes
+import DataTypes
 import GHC.Exts
 
 someFunc :: IO ()

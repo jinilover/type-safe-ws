@@ -3,14 +3,17 @@ module Main where
 import Servant
 
 import Services
-import ApiType
-import Data
+import ApiTypes
+import DataTypes
 import Config
-import ConfigType
+import ConfigTypes
+import PostgresServices
 import Network.Wai.Handler.Warp
 
 main :: IO ()
-main = loadAppConfig "src/resources/appl.cfg" >>= ((`run` app) . port)
+main = do
+  migrateDb "src/resources/dbscripts"
+  loadAppConfig "src/resources/appl.cfg" >>= ((`run` app) . port)
 
 server :: Server UserAPI
 server = return . sortBy

@@ -27,6 +27,9 @@ dependencies:
 - time
 - aeson
 - configurator
+- warp
+- postgresql-simple
+- postgresql-simple-migration
 
 library:
   source-dirs: src/lib
@@ -41,7 +44,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - type-safe-ws
-    - warp
 
 tests:
   type-safe-ws-test:
