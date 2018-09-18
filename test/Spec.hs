@@ -1,2 +1,9 @@
+import Test.Hspec
+
+import AppConfigSpec
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = hspec $ foldl (>>) (return ()) specs
+
+specs :: [Spec]
+specs = [loadAppConfigSpec]

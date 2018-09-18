@@ -12,8 +12,9 @@ import Network.Wai.Handler.Warp
 
 main :: IO ()
 main = do
-  migrateDb "src/resources/dbscripts"
-  loadAppConfig "src/resources/appl.cfg" >>= ((`run` app) . port)
+  appConfig <- loadAppConfig "src/resources/appl.cfg"
+  migrateDb $ dbscriptsDir appConfig
+  run (appPort appConfig) app
 
 server :: Server UserAPI
 server = return . sortBy
