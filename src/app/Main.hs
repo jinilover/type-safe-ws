@@ -13,7 +13,7 @@ import Network.Wai.Handler.Warp
 main :: IO ()
 main = do
   appConfig <- loadAppConfig "src/resources/appl.cfg"
-  migrateDb $ dbscriptsDir appConfig
+  migrateDb appConfig
   run (appPort appConfig) app
 
 server :: Server UserAPI
