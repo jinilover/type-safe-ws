@@ -7,8 +7,8 @@ import Control.Monad.Trans.Reader
 
 import TypeSafeWS.ConfigTypes
 
-loadAppConfig :: String -> IO AppConfig
-loadAppConfig file = load [Required file] >>= runReaderT appReaderT
+loadAppConfig :: IO AppConfig
+loadAppConfig = load [Required "src/resources/appl.cfg"] >>= runReaderT appReaderT
   where appReaderT = AppConfig <$> fieldReaderT "AppConfig.appPort"
                                <*> fieldReaderT "AppConfig.dbscriptsDir"
                                <*> dbReaderT

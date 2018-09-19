@@ -32,6 +32,7 @@ dependencies:
 - warp
 - postgresql-simple
 - postgresql-simple-migration
+- mtl
 
 library:
   source-dirs: src/lib

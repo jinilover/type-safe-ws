@@ -10,7 +10,7 @@ loadAppConfigSpec :: Spec
 loadAppConfigSpec =
   describe "AppConfig spec" $
     it "load AppConfig successfully/correctly" $
-       unsafePerformIO (loadAppConfig "src/resources/appl.cfg")
+       unsafePerformIO loadAppConfig
         `shouldBe`
        AppConfig {
           appPort = 9001,

@@ -3,21 +3,28 @@
 
 module TypeSafeWS.DbServices where
 
+import Data.Time.Calendar
 import Data.Int (Int64)
 import Database.PostgreSQL.Simple
+import Database.PostgreSQL.Simple.Time
 import Database.PostgreSQL.Simple.Migration
-import Data.ByteString.Char8
+import qualified Data.ByteString.Char8 as BS8
+import Data.Either
 
 import TypeSafeWS.ConfigTypes
 import TypeSafeWS.DataTypes
+import TypeSafeWS.Config
 
-getDbConn :: DbConfig -> IO Connection
-getDbConn (DbConfig host name user passwd port) =
-  let url = pack $ "host='" ++ host ++ "' dbname='" ++ name ++ "' user='" ++ user ++ "' password='" ++ passwd ++ "' port=" ++ show port in
+getDbConn :: IO Connection
+getDbConn = do
+  AppConfig{..} <- loadAppConfig
+  let DbConfig{..} = dbConfig
+      url = BS8.pack $ "host='" ++ dbHost ++ "' dbname='" ++ dbName ++ "' user='" ++ user ++ "' password='" ++ password ++ "' port=" ++ show dbPort in
       connectPostgreSQL url
 
-migrateDb :: String -> Connection -> IO ()
-migrateDb dir conn = do
+migrateDb :: String -> IO ()
+migrateDb dir = do
+  conn <- getDbConn
   initResult <- withTransaction conn $ runMigration $
     MigrationContext MigrationInitialization True conn
   print $ "MigrationInitialization: " ++ show initResult
@@ -25,5 +32,14 @@ migrateDb dir conn = do
     MigrationContext (MigrationDirectory dir) True conn
   print $ "Migration result: " ++ show migrateResult
 
-addUser :: Connection -> User -> IO Int64
-addUser conn User{..} = execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, registrationDate)
+addUser :: User -> IO Int64
+addUser user@User{..} = getDbConn >>= (\conn -> either (fail . failedCause) (insert conn) (parseDay $ BS8.pack registrationDate))
+  where insert conn date = execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date)
+        failedCause = (++ " from " ++ show user)
+
+listAllUsers :: IO [User]
+listAllUsers = do
+  conn <- getDbConn
+  tuples <- query_ conn "SELECT user_name, age, email, registration_date FROM users" :: IO [(String, Int, String, Day)]
+  return $ toUser <$> tuples
+  where toUser (name, age, email, date) = User name age email (show date)
