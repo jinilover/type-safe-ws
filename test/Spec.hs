@@ -1,6 +1,6 @@
 import Test.Hspec
 
-import AppConfigSpec
+import TypeSafeWS.AppConfigSpec
 
 main :: IO ()
 main = hspec $ foldl (>>) (return ()) specs

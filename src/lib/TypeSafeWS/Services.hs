@@ -1,10 +1,11 @@
 {-# LANGUAGE GADTs #-}
 
-module Services where
+module TypeSafeWS.Services where
 
-import ApiTypes
-import DataTypes
 import GHC.Exts
+
+import TypeSafeWS.ApiTypes
+import TypeSafeWS.DataTypes
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc!!"

@@ -1,4 +1,4 @@
-module ConfigTypes where
+module TypeSafeWS.ConfigTypes where
 
 data AppConfig = AppConfig { appPort :: Int
                            , dbscriptsDir :: String

@@ -1,9 +1,10 @@
-module AppConfigSpec where
+module TypeSafeWS.AppConfigSpec where
 
 import System.IO.Unsafe
 import Test.Hspec
-import Config
-import ConfigTypes
+
+import TypeSafeWS.Config
+import TypeSafeWS.ConfigTypes
 
 loadAppConfigSpec :: Spec
 loadAppConfigSpec =

@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module DataTypes where
+module TypeSafeWS.DataTypes where
 
 import Data.Time.Calendar
 import GHC.Generics

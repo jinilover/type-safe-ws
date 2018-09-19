@@ -1,10 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Config where
+module TypeSafeWS.Config where
 
 import Data.Configurator
 import Data.Configurator.Types
-import ConfigTypes
 import Control.Monad.Trans.Reader
+
+import TypeSafeWS.ConfigTypes
 
 loadAppConfig :: String -> IO AppConfig
 loadAppConfig file = load [Required file] >>= runReaderT appReaderT
