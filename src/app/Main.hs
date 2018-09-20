@@ -1,4 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Main where
 
@@ -22,13 +23,14 @@ main = do
   Db.migrateDb dbscriptsDir
   run appPort app
 
-server :: Server UserAPI
-server = sortUsers
+server :: Server ServiceAPI
+server = return "Welcome to microservice in pure FP"
+    :<|> sortUsers
     :<|> addUser
     :<|> deleteUser
 
-userApi :: Proxy UserAPI
-userApi = Proxy
+serviceApi :: Proxy ServiceAPI
+serviceApi = Proxy
 
 app :: Application
-app = serve userApi server
+app = serve serviceApi server

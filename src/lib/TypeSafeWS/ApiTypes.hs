@@ -11,9 +11,13 @@ import Servant.API
 
 import TypeSafeWS.DataTypes
 
+type InfoAPI = Get '[PlainText] Text
+
 type UserAPI = "users" :> QueryParam "sortBy" SortBy :> Get '[JSON] [User]
           :<|> "users" :> ReqBody '[JSON] User :> Post '[PlainText] String
           :<|> "users" :> Capture "user_name" String :> Delete '[PlainText] String
+
+type ServiceAPI = InfoAPI :<|> UserAPI
 
 data SortBy = Age | Name
 
