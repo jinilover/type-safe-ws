@@ -13,6 +13,7 @@ import TypeSafeWS.DataTypes
 
 type UserAPI = "users" :> QueryParam "sortBy" SortBy :> Get '[JSON] [User]
           :<|> "users" :> ReqBody '[JSON] User :> Post '[PlainText] String
+          :<|> "users" :> Capture "user_name" String :> Delete '[PlainText] String
 
 data SortBy = Age | Name
 

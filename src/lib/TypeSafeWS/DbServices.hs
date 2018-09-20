@@ -8,8 +8,8 @@ import Data.Int (Int64)
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.Time
 import Database.PostgreSQL.Simple.Migration
-import qualified Data.ByteString.Char8 as BS8
 import Data.Either
+import qualified Data.ByteString.Char8 as BS8
 
 import TypeSafeWS.ConfigTypes
 import TypeSafeWS.DataTypes
@@ -46,3 +46,8 @@ listAllUsers = do
   tuples <- query_ conn "SELECT user_name, age, email, registration_date FROM users" :: IO [(String, Int, String, Day)]
   return $ toUser <$> tuples
   where toUser (name, age, email, date) = User name age email (show date)
+
+deleteUser :: String -> IO Int64
+deleteUser user_name =
+  getDbConn >>= (\conn ->
+    execute conn "DELETE FROM users WHERE user_name = ?" $ Only user_name)
