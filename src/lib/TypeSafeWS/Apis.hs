@@ -22,5 +22,6 @@ addUser = liftIO . Db.addUser
 deleteUser :: String -> Handler String
 deleteUser user_name = liftIO (Db.deleteUser user_name) >>= handleResult
   where handleResult :: Int64 -> Handler String
-        handleResult 0 = throwError err400 { errReasonPhrase = user_name ++ " already removed" }
-        handleResult _ = return $ user_name ++ " removed"
+        handleResult n
+          | n < 1 = throwError err400 { errReasonPhrase = user_name ++ " not exists" }
+          | otherwise = return $ user_name ++ " removed"
