@@ -35,10 +35,10 @@ migrateDb dir = do
 addUser :: User -> IO String
 addUser user@User{..} = do
   conn <- getDbConn
-  either (fail . failedCause) (insert conn) (parseDay $ BS8.pack registrationDate)
+  either (fail . errorCause) (insert conn) (parseDay $ BS8.pack registrationDate)
   return $ "User " ++ name ++ " created"
   where insert conn date = execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date)
-        failedCause = (++ " from " ++ show user)
+        errorCause = (++ " from " ++ show user)
 
 listAllUsers :: IO [User]
 listAllUsers = do
