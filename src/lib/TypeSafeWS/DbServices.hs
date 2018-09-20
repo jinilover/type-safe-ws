@@ -32,8 +32,11 @@ migrateDb dir = do
     MigrationContext (MigrationDirectory dir) True conn
   print $ "Migration result: " ++ show migrateResult
 
-addUser :: User -> IO Int64
-addUser user@User{..} = getDbConn >>= (\conn -> either (fail . failedCause) (insert conn) (parseDay $ BS8.pack registrationDate))
+addUser :: User -> IO String
+addUser user@User{..} = do
+  conn <- getDbConn
+  either (fail . failedCause) (insert conn) (parseDay $ BS8.pack registrationDate)
+  return $ "User " ++ name ++ " created"
   where insert conn date = execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date)
         failedCause = (++ " from " ++ show user)
 

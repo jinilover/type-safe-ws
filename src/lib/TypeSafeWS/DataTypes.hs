@@ -3,6 +3,7 @@
 module TypeSafeWS.DataTypes where
 
 import Data.Time.Calendar
+import Data.Aeson.Types
 import GHC.Generics
 
 data User = User {
@@ -11,3 +12,6 @@ data User = User {
   email :: String,
   registrationDate :: String
 } deriving (Show, Generic)
+
+instance ToJSON User
+instance FromJSON User

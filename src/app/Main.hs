@@ -6,6 +6,8 @@ import Servant
 import Network.Wai.Handler.Warp
 import Data.Time.Calendar
 import Control.Monad.IO.Class
+import Control.Monad.Error.Class
+import GHC.IO.Exception
 
 import TypeSafeWS.DbServices
 import TypeSafeWS.Apis
@@ -18,12 +20,11 @@ main :: IO ()
 main = do
   AppConfig{..} <- loadAppConfig
   migrateDb dbscriptsDir
-  addUser $ User "Isaac Newton" 372 "isaac@newton.co.uk" "1683-03-01"
-  addUser $ User "Albert Einstein" 136 "ae@mc2.org"      "1905-12-01"
   run appPort app
 
 server :: Server UserAPI
-server = \sort -> liftIO $ sortBy sort <$> listAllUsers
+server = (\sort -> liftIO $ sortBy sort <$> listAllUsers)
+    :<|> liftIO . addUser
 
 userApi :: Proxy UserAPI
 userApi = Proxy

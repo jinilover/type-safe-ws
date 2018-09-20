@@ -4,16 +4,15 @@
 
 module TypeSafeWS.ApiTypes where
 
+import Data.Int (Int64)
 import Data.Text
 import Data.Time (Day)
 import Servant.API
-import Data.Aeson.Types
 
 import TypeSafeWS.DataTypes
 
 type UserAPI = "users" :> QueryParam "sortBy" SortBy :> Get '[JSON] [User]
-
-instance ToJSON User
+          :<|> "users" :> ReqBody '[JSON] User :> Post '[PlainText] String
 
 data SortBy = Age | Name
 
