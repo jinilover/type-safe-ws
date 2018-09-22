@@ -3,6 +3,8 @@
 
 module TypeSafeWS.DbServices where
 
+import Control.Exception.Base
+import Data.List
 import Data.Time.Calendar
 import Data.Int (Int64)
 import Database.PostgreSQL.Simple
@@ -41,10 +43,14 @@ migrateDb dir = do
 addUser :: User -> IO String
 addUser user@User{..} = do
   conn <- getDbConn
-  either (fail . errorCause) (insert conn) (parseDay $ BS8.pack registrationDate)
+  either (fail . errorCause) ((`catch` handleDbError) . insert conn) (parseDay $ BS8.pack registrationDate)
   return $ "User " ++ name ++ " created"
-  where insert conn date = execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date)
-        errorCause = (++ " from " ++ show user)
+  where errorCause = (++ " from " ++ show user)
+        insert conn date = execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date)
+        handleDbError :: SomeException -> IO Int64
+        handleDbError (SomeException e) =
+          let dbErrorMsg = displayException e in
+          if "duplicate key value" `isInfixOf` dbErrorMsg then fail dbErrorMsg else throwIO e
 
 listAllUsers :: IO [User]
 listAllUsers = do
