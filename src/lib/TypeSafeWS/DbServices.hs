@@ -19,7 +19,13 @@ getDbConn :: IO Connection
 getDbConn = do
   AppConfig{..} <- loadAppConfig
   let DbConfig{..} = dbConfig
-      url = BS8.pack $ "host='" ++ dbHost ++ "' dbname='" ++ dbName ++ "' user='" ++ user ++ "' password='" ++ password ++ "' port=" ++ show dbPort in
+      url = BS8.pack $
+            "host='" ++ dbHost ++
+            "' dbname='" ++ dbName ++
+            "' user='" ++ user ++
+            "' password='" ++ password ++
+            "' port=" ++
+            show dbPort in
       connectPostgreSQL url
 
 migrateDb :: String -> IO ()
