@@ -21,12 +21,11 @@ sortUsers = liftIO . (<$> Db.listAllUsers) . sortBy
 
 addUser :: User -> Handler String
 addUser = (>>= toHttpResponse) . liftIO . Db.addUser
-  where toHttpResponse :: AddUserResult -> Handler String
-        toHttpResponse (UserAdded msg) = return msg
+  where toHttpResponse (UserAdded msg) = return msg
         toHttpResponse (InvalidDate msg) = throwError err400 {errReasonPhrase = msg}
         toHttpResponse (UserAlreadyExisted msg) = throwError err400 {errReasonPhrase = msg}
 
 deleteUser :: String -> Handler String
-deleteUser user_name = liftIO (Db.deleteUser user_name) >>= toHttpResponse
-  where toHttpResponse 0 = throwError err400 { errReasonPhrase = user_name ++ " not exists" }
-        toHttpResponse _ = return $ user_name ++ " removed"
+deleteUser = (>>= toHttpResponse) . liftIO . Db.deleteUser
+  where toHttpResponse 0 = throwError err400 { errReasonPhrase = "user name not exists" }
+        toHttpResponse _ = return "user removed"
