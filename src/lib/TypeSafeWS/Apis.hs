@@ -14,18 +14,17 @@ import qualified TypeSafeWS.DbServices as Db
 import qualified Data.ByteString.Char8 as BS8
 
 sortUsers :: Maybe SortBy -> Handler [User]
-sortUsers sortParam = liftIO $ sortBy sortParam <$> Db.listAllUsers
+sortUsers = liftIO . (<$> Db.listAllUsers) . sortBy
   where sortBy Nothing = id
         sortBy (Just Age) = sortWith age
         sortBy _ = sortWith name
 
 addUser :: User -> Handler String
-addUser user = liftIO toEither >>= toHttpResponse
-  where toEither :: IO (Either IOException String)
-        toEither = try $ Db.addUser user
-        toHttpResponse :: Either IOException String -> Handler String
-        toHttpResponse (Right s) = return s
-        toHttpResponse (Left ioErr) = if isUserError ioErr then throwError err400 {errReasonPhrase = displayException ioErr} else throwError err500
+addUser = (>>= toHttpResponse) . liftIO . Db.addUser
+  where toHttpResponse :: AddUserResult -> Handler String
+        toHttpResponse (UserAdded msg) = return msg
+        toHttpResponse (InvalidDate msg) = throwError err400 {errReasonPhrase = msg}
+        toHttpResponse (UserAlreadyExisted msg) = throwError err400 {errReasonPhrase = msg}
 
 deleteUser :: String -> Handler String
 deleteUser user_name = liftIO (Db.deleteUser user_name) >>= toHttpResponse

@@ -15,3 +15,5 @@ data User = User {
 
 instance ToJSON User
 instance FromJSON User
+
+data AddUserResult = UserAdded String | InvalidDate String | UserAlreadyExisted String

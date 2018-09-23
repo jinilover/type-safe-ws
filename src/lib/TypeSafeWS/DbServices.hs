@@ -40,17 +40,18 @@ migrateDb dir = do
     MigrationContext (MigrationDirectory dir) True conn
   print $ "Migration result: " ++ show migrateResult
 
-addUser :: User -> IO String
-addUser user@User{..} = do
-  conn <- getDbConn
-  either (fail . errorCause) ((`catch` handleDbError) . insert conn) (parseDay $ BS8.pack registrationDate)
-  return $ "User " ++ name ++ " created"
-  where errorCause = (++ " from " ++ show user)
-        insert conn date = execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date)
-        handleDbError :: SomeException -> IO Int64
-        handleDbError (SomeException e) =
-          let dbErrorMsg = displayException e in
-          if "duplicate key value" `isInfixOf` dbErrorMsg then fail dbErrorMsg else throwIO e
+addUser :: User -> IO AddUserResult
+addUser user@User{..} = getDbConn >>= (`insertUser` (parseDay $ BS8.pack registrationDate))
+  where insertUser :: Connection -> Either String Day -> IO AddUserResult
+        insertUser _ (Left parseErr) = return $ InvalidDate $ parseErr ++ " from date " ++ registrationDate
+        insertUser conn (Right date) =
+          let addUserIO = (\_ -> UserAdded $ "User " ++ name ++ " created")
+                          <$> execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date) in
+          catch addUserIO handleError
+        handleError :: SomeException -> IO AddUserResult
+        handleError (SomeException e) =
+          let errMsg = displayException e in
+          if "duplicate key value" `isInfixOf` errMsg then return $ UserAlreadyExisted errMsg else throwIO e
 
 listAllUsers :: IO [User]
 listAllUsers = do
