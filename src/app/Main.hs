@@ -23,13 +23,14 @@ main = do
   Db.migrateDb dbscriptsDir
   run appPort app
 
-server :: Server ServiceAPI
+server :: Server RestAPI
 server = return "Welcome to microservice in pure FP"
     :<|> sortUsers
     :<|> addUser
     :<|> deleteUser
+    :<|> getServiceInfo
 
-serviceApi :: Proxy ServiceAPI
+serviceApi :: Proxy RestAPI
 serviceApi = Proxy
 
 app :: Application

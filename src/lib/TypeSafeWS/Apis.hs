@@ -7,11 +7,12 @@ import Control.Monad.IO.Class
 import Control.Exception.Base
 import System.IO.Error
 import Data.Int (Int64)
+import qualified Data.ByteString.Char8 as BS8
 
 import TypeSafeWS.ApiTypes
 import TypeSafeWS.DataTypes
+import TypeSafeWS.Git
 import qualified TypeSafeWS.DbServices as Db
-import qualified Data.ByteString.Char8 as BS8
 
 sortUsers :: Maybe SortBy -> Handler [User]
 sortUsers = liftIO . (<$> Db.listAllUsers) . sortBy
@@ -21,11 +22,13 @@ sortUsers = liftIO . (<$> Db.listAllUsers) . sortBy
 
 addUser :: User -> Handler String
 addUser = (>>= toHttpResponse) . liftIO . Db.addUser
-  where toHttpResponse (UserAdded msg) = return msg
-        toHttpResponse (InvalidDate msg) = throwError err400 {errReasonPhrase = msg}
-        toHttpResponse (UserAlreadyExisted msg) = throwError err400 {errReasonPhrase = msg}
+  where toHttpResponse (Right msg) = return msg
+        toHttpResponse (Left err) = throwError err400 {errReasonPhrase = msg err}
 
 deleteUser :: String -> Handler String
 deleteUser = (>>= toHttpResponse) . liftIO . Db.deleteUser
   where toHttpResponse 0 = throwError err400 { errReasonPhrase = "user name not exists" }
         toHttpResponse _ = return "user removed"
+
+getServiceInfo :: Handler GitInfo
+getServiceInfo = liftIO $ getGitInfo $ FilePath "."

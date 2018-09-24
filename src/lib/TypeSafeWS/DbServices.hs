@@ -40,18 +40,20 @@ migrateDb dir = do
     MigrationContext (MigrationDirectory dir) True conn
   print $ "Migration result: " ++ show migrateResult
 
-addUser :: User -> IO AddUserResult
+addUser :: User -> IO (Either AddUserError String)
 addUser user@User{..} = getDbConn >>= (`insertUser` (parseDay $ BS8.pack registrationDate))
-  where insertUser :: Connection -> Either String Day -> IO AddUserResult
-        insertUser _ (Left parseErr) = return $ InvalidDate $ parseErr ++ " from date " ++ registrationDate
+  where insertUser :: Connection -> Either String Day -> IO (Either AddUserError String)
+        insertUser _ (Left parseErr) = return $ Left $ InvalidDate $ parseErr ++ " from date " ++ registrationDate
         insertUser conn (Right date) =
-          let addUserIO = (\_ -> UserAdded $ "User " ++ name ++ " created")
+          let addUserIO = const (Right $ "User " ++ name ++ " created")
                           <$> execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date) in
           catch addUserIO handleError
-        handleError :: SomeException -> IO AddUserResult
+        handleError :: SomeException -> IO (Either AddUserError String)
         handleError (SomeException e) =
           let errMsg = displayException e in
-          if "duplicate key value" `isInfixOf` errMsg then return $ UserAlreadyExisted errMsg else throwIO e
+          if "duplicate key value" `isInfixOf` errMsg
+              then return $ Left $ UserAlreadyExisted errMsg
+              else throwIO e
 
 listAllUsers :: IO [User]
 listAllUsers = do

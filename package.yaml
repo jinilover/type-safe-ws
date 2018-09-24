@@ -33,6 +33,7 @@ dependencies:
 - postgresql-simple
 - postgresql-simple-migration
 - mtl
+- process
 
 library:
   source-dirs: src/lib

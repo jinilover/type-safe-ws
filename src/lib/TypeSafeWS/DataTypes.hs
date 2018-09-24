@@ -16,4 +16,7 @@ data User = User {
 instance ToJSON User
 instance FromJSON User
 
-data AddUserResult = UserAdded String | InvalidDate String | UserAlreadyExisted String
+data AddUserError = InvalidDate { msg :: String }
+                  | UserAlreadyExisted { msg :: String }
+
+newtype FilePath = FilePath String
