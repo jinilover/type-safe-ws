@@ -17,4 +17,7 @@ loadAppConfig = load [Required "src/resources/appl.cfg"] >>= runReaderT appReade
                              <*> fieldReaderT "AppConfig.DbConfig.user"
                              <*> fieldReaderT "AppConfig.DbConfig.password"
                              <*> fieldReaderT "AppConfig.DbConfig.dbPort"
+                             <*> fieldReaderT "AppConfig.DbConfig.noOfStripes"
+                             <*> fieldReaderT "AppConfig.DbConfig.idleTime"
+                             <*> fieldReaderT "AppConfig.DbConfig.stripeSize"
         fieldReaderT name = ReaderT (`require` name)

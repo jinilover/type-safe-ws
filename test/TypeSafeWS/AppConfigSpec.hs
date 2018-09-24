@@ -20,6 +20,9 @@ loadAppConfigSpec =
             dbName = "postgres",
             user = "postgres",
             password = "password",
-            dbPort = 5445
+            dbPort = 5445,
+            noOfStripes = 2,
+            idleTime = 60,
+            stripeSize = 10
           }
         }
