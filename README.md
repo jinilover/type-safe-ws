@@ -66,6 +66,23 @@ Example
 curl -i -X DELETE http://localhost:9001/users/Isaac%20Newton
 ```
 
+### Display git information
+```
+GET /service_info
+```
+Example
+```
+curl http://localhost:9001/service_info
+```
+Json response will be something like
+```
+{
+  "gitCommitMessage": "add initConnPool",
+  "gitCommitDate": "Tue Sep 25 01:14:51 2018 +1000",
+  "gitHash": "1fd86f71ef1b795aa94ac58468f273d51fcb3ec0",
+  "gitBranch": "master"
+}
+```
 ## Setup environment
 
 ### Install PostgreSql
@@ -84,6 +101,3 @@ For the requirement in compiling the code using PostgreSql-simple,
 
 ### For unit-test
 `stack build type-safe-ws\:test\:type-safe-ws-test`
-
-## TODO
-Add an API to display the GIT information.  This is very useful in providing the version of the source being deployed in different environments.
