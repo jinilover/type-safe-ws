@@ -18,5 +18,3 @@ instance FromJSON User
 
 data AddUserError = InvalidDate { msg :: String }
                   | UserAlreadyExisted { msg :: String }
-
-newtype FilePath = FilePath String

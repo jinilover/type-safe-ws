@@ -11,6 +11,8 @@ import Prelude hiding (FilePath)
 
 import TypeSafeWS.DataTypes
 
+newtype FilePath = FilePath String
+
 getGitInfo :: FilePath -> IO GitInfo
 getGitInfo root =
   let run = runGitCmd root in
