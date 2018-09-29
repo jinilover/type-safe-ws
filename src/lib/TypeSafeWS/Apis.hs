@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE RecordWildCards #-}
 module TypeSafeWS.Apis where
 
 import GHC.Exts
@@ -7,29 +8,30 @@ import Control.Monad.IO.Class
 import Control.Exception.Base
 import System.IO.Error
 import Data.Int (Int64)
-import Database.PostgreSQL.Simple
+import GitHash
 import qualified Data.ByteString.Char8 as BS8
 
 import TypeSafeWS.ApiTypes
 import TypeSafeWS.DataTypes
-import TypeSafeWS.Git
-import qualified TypeSafeWS.DbServices as Db
 
-sortUsers :: Connection -> Maybe SortBy -> Handler [User]
-sortUsers conn = liftIO . (<$> Db.listAllUsers conn) . sortBy
+sortUsers :: Db -> Maybe SortBy -> Handler [User]
+sortUsers Db{..} = liftIO . (<$> _listAllUsers) . sortBy
   where sortBy Nothing = id
         sortBy (Just Age) = sortWith age
         sortBy _ = sortWith name
 
-addUser :: Connection -> User -> Handler String
-addUser conn = (>>= toHttpResponse) . liftIO . Db.addUser conn
+addUser :: Db -> User -> Handler String
+addUser Db{..} = (>>= toHttpResponse) . liftIO . _addUser
   where toHttpResponse (Right msg) = return msg
         toHttpResponse (Left err) = throwError err400 {errReasonPhrase = msg err}
 
-deleteUser :: Connection -> String -> Handler String
-deleteUser conn = (>>= toHttpResponse) . liftIO . Db.deleteUser conn
+deleteUser :: Db -> String -> Handler String
+deleteUser Db{..} = (>>= toHttpResponse) . liftIO . _deleteUser
   where toHttpResponse 0 = throwError err400 { errReasonPhrase = "user name not exists" }
         toHttpResponse _ = return "user removed"
 
-getServiceInfo :: Handler GitInfo
-getServiceInfo = liftIO $ getGitInfo $ FilePath "."
+getServiceInfo :: Handler ServiceInfo
+getServiceInfo = liftIO (getGitInfo ".") >>= toHttpResponse
+  where toHttpResponse (Right gi) =
+          return $ ServiceInfo (giHash gi) (giBranch gi) (giCommitDate gi) (giCommitMessage gi)
+        toHttpResponse (Left err) = throwError err500 {errReasonPhrase = show err}

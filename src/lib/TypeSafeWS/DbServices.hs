@@ -29,6 +29,14 @@ initConnPool DbConfig{..} =
             show dbPort in
       createPool (connectPostgreSQL url) close noOfStripes (realToFrac idleTime) stripeSize
 
+createDb :: Pool Connection -> Db
+createDb pool = let withConnPool = withResource pool in
+  Db {
+    _addUser = withConnPool . flip addUser
+  , _listAllUsers = withConnPool listAllUsers
+  , _deleteUser = withConnPool . flip deleteUser
+  }
+
 migrateDb :: Connection -> String -> IO ()
 migrateDb conn dir = do
   initResult <- withTransaction conn $ runMigration $

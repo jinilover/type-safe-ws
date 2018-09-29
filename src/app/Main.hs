@@ -14,7 +14,7 @@ import Data.Pool
 
 import TypeSafeWS.ApiTypes
 import TypeSafeWS.Apis
-import qualified TypeSafeWS.DbServices as Db
+import qualified TypeSafeWS.DbServices as DbServices
 import TypeSafeWS.DataTypes
 import TypeSafeWS.Config
 import TypeSafeWS.ConfigTypes
@@ -22,17 +22,17 @@ import TypeSafeWS.ConfigTypes
 main :: IO ()
 main = do
   AppConfig{..} <- loadAppConfig
-  pool <- Db.initConnPool dbConfig
-  withResource pool (`Db.migrateDb` dbscriptsDir)
+  pool <- DbServices.initConnPool dbConfig
+  withResource pool (`DbServices.migrateDb` dbscriptsDir)
   run appPort $ app pool
 
 server :: Pool Connection -> Server RestAPI
-server pool = let withConnPool = withResource pool in
-    return "Welcome to microservice in pure FP"
-    :<|> withConnPool . flip sortUsers
-    :<|> withConnPool . flip addUser
-    :<|> withConnPool . flip deleteUser
-    :<|> getServiceInfo
+server pool = let db = DbServices.createDb pool in
+  return "Welcome to microservice in pure FP"
+  :<|> getServiceInfo
+  :<|> sortUsers db
+  :<|> addUser db
+  :<|> deleteUser db
 
 serviceApi :: Proxy RestAPI
 serviceApi = Proxy

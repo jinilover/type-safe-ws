@@ -1,6 +1,6 @@
-module TypeSafeWS.AppConfigSpec where
+module TypeSafeWS.AppConfigSpec
+  (specs) where
 
-import System.IO.Unsafe
 import Test.Hspec
 
 import TypeSafeWS.Config
@@ -10,19 +10,22 @@ loadAppConfigSpec :: Spec
 loadAppConfigSpec =
   describe "AppConfig spec" $
     it "load AppConfig successfully/correctly" $
-       unsafePerformIO loadAppConfig
-        `shouldBe`
-       AppConfig {
-          appPort = 9001,
-          dbscriptsDir = "src/resources/dbscripts",
-          dbConfig = DbConfig {
-            dbHost = "localhost",
-            dbName = "postgres",
-            user = "postgres",
-            password = "password",
-            dbPort = 5445,
-            noOfStripes = 2,
-            idleTime = 60,
-            stripeSize = 10
+       loadAppConfig >>= (`shouldBe`
+         AppConfig {
+            appPort = 9001,
+            dbscriptsDir = "src/resources/dbscripts",
+            dbConfig = DbConfig {
+              dbHost = "localhost",
+              dbName = "postgres",
+              user = "postgres",
+              password = "password",
+              dbPort = 5445,
+              noOfStripes = 2,
+              idleTime = 60,
+              stripeSize = 10
+            }
           }
-        }
+        )
+
+specs :: [Spec]
+specs = [loadAppConfigSpec]

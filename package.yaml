@@ -35,6 +35,8 @@ dependencies:
 - mtl
 - process
 - resource-pool
+- githash
+- containers
 
 library:
   source-dirs: src/lib
