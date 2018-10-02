@@ -62,4 +62,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hspec
+    - hspec-wai
+    - hspec-wai-json
+    - http-types
     - type-safe-ws

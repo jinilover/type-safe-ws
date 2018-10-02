@@ -2,12 +2,15 @@ module TypeSafeWS.ApisSpec
   (specs) where
 
 import Test.Hspec
+
 import Control.Monad.Trans.Except
 import Servant
 
 import TypeSafeWS.DataTypes
 import TypeSafeWS.Apis
 import TypeSafeWS.ApiTypes
+
+import TypeSafeWS.MockData
 
 sortUsersSpec :: Spec
 sortUsersSpec =
@@ -45,10 +48,6 @@ deleteUserSpec =
       let result = removeUserFromMock db {_deleteUser = const $ return 0} in
       io result >>= (`shouldBe` Left (err400 {errReasonPhrase = "user name not exists"}))
   where removeUserFromMock = (`deleteUser` name albert)
-
-isaac = User "Isaac Newton" 372 "isaac@newton.co.uk" "1683-03-01"
-kurt = User "Kurt Goedel" 112 "kg@uv.edu" "1906-04-28"
-albert = User "Albert Einstein" 112 "ae@mc2.org" "1905-12-01"
 
 db = Db undefined undefined undefined
 

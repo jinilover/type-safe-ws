@@ -5,19 +5,15 @@ module Main where
 
 import Servant
 import Network.Wai.Handler.Warp
-import Data.Time.Calendar
 import Database.PostgreSQL.Simple
-import Control.Monad.IO.Class
-import Control.Monad.Error.Class
-import GHC.IO.Exception
 import Data.Pool
 
-import TypeSafeWS.ApiTypes
-import TypeSafeWS.Apis
 import qualified TypeSafeWS.DbServices as DbServices
+import TypeSafeWS.ApiTypes
 import TypeSafeWS.DataTypes
 import TypeSafeWS.Config
 import TypeSafeWS.ConfigTypes
+import TypeSafeWS.Server
 
 main :: IO ()
 main = do
@@ -26,16 +22,5 @@ main = do
   withResource pool (`DbServices.migrateDb` dbscriptsDir)
   run appPort $ app pool
 
-server :: Pool Connection -> Server RestAPI
-server pool = let db = DbServices.createDb pool in
-  return "Welcome to microservice in pure FP"
-  :<|> getServiceInfo
-  :<|> sortUsers db
-  :<|> addUser db
-  :<|> deleteUser db
-
-serviceApi :: Proxy RestAPI
-serviceApi = Proxy
-
 app :: Pool Connection -> Application
-app = serve serviceApi . server
+app = serve serviceApi . server . DbServices.createDb

@@ -2,13 +2,14 @@
 {-# LANGUAGE RecordWildCards #-}
 module TypeSafeWS.DbServicesSpec where
 
+import Test.Hspec
+
 import Database.PostgreSQL.Simple
 import Control.Monad
 import Data.Int (Int64)
 import Data.Pool
 import Data.Set
 import Data.List
-import Test.Hspec
 
 import TypeSafeWS.DbServices
 import TypeSafeWS.Config
