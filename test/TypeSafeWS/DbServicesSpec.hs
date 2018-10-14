@@ -8,6 +8,7 @@ import Data.Int (Int64)
 import Data.Pool
 import Data.Set
 import Data.List
+import Protolude
 
 import TypeSafeWS.DbServices
 import TypeSafeWS.Config

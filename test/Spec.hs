@@ -1,5 +1,7 @@
 import Test.Hspec
 
+import Protolude
+
 import qualified TypeSafeWS.AppConfigSpec as AppCfg
 import qualified TypeSafeWS.DbServicesSpec as Db
 import qualified TypeSafeWS.ApisSpec as Apis

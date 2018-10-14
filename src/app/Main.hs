@@ -4,6 +4,7 @@ import Servant
 import Network.Wai.Handler.Warp
 import Database.PostgreSQL.Simple
 import Data.Pool
+import Protolude
 
 import qualified TypeSafeWS.DbServices as DbServices
 import TypeSafeWS.ApiTypes

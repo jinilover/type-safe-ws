@@ -2,6 +2,7 @@ module TypeSafeWS.Server where
 
 import Servant
 import Network.Wai.Handler.Warp
+import Prelude (return)
 
 import TypeSafeWS.DataTypes
 import TypeSafeWS.ApiTypes

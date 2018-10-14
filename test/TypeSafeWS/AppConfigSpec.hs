@@ -3,6 +3,8 @@ module TypeSafeWS.AppConfigSpec
 
 import Test.Hspec
 
+import Protolude
+
 import TypeSafeWS.Config
 import TypeSafeWS.ConfigTypes
 

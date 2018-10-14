@@ -7,6 +7,8 @@ import Data.Int (Int64)
 import Data.Text
 import Data.Time (Day)
 import Servant.API
+import Prelude (String)
+import Protolude
 
 import TypeSafeWS.DataTypes
 

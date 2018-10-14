@@ -1,7 +1,7 @@
 module TypeSafeWS.DbServices where
 
-import Control.Exception.Base
-import Data.List
+import Control.Exception.Base hiding (throwIO)
+import Data.List hiding (map)
 import Data.Time.Calendar
 import Data.Int (Int64)
 import Database.PostgreSQL.Simple
@@ -9,6 +9,8 @@ import Database.PostgreSQL.Simple.Time
 import Database.PostgreSQL.Simple.Migration
 import Data.Either
 import Data.Pool
+import Protolude
+import Prelude (String)
 import qualified Data.ByteString.Char8 as BS8
 
 import TypeSafeWS.ConfigTypes

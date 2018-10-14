@@ -1,5 +1,8 @@
 module TypeSafeWS.ConfigTypes where
 
+import Protolude
+import Prelude (String)
+
 data AppConfig = AppConfig { appPort :: Int
                            , dbscriptsDir :: String
                            , dbConfig :: DbConfig

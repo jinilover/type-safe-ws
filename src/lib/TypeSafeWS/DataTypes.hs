@@ -6,6 +6,8 @@ import Data.Time.Calendar
 import Data.Aeson.Types
 import Data.Int (Int64)
 import GHC.Generics
+import Protolude
+import Prelude (String)
 
 data ServiceInfo = ServiceInfo {
   gitHash :: String

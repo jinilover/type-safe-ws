@@ -8,6 +8,8 @@ import Control.Exception.Base
 import System.IO.Error
 import Data.Int (Int64)
 import GitHash
+import Protolude hiding (msg)
+import Prelude (String)
 import qualified Data.ByteString.Char8 as BS8
 
 import TypeSafeWS.ApiTypes
@@ -15,7 +17,7 @@ import TypeSafeWS.DataTypes
 
 sortUsers :: Db -> Maybe SortBy -> Handler [User]
 sortUsers Db{..} = liftIO . (<$> _listAllUsers) . sortBy
-  where sortBy Nothing = id
+  where sortBy Nothing = identity
         sortBy (Just Age) = sortWith age
         sortBy _ = sortWith name
 

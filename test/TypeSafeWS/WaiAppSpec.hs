@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 module TypeSafeWS.WaiAppSpec
   (specs) where
@@ -16,6 +15,7 @@ import Database.PostgreSQL.Simple.Time
 import Control.Arrow
 import Data.Bifunctor
 import Data.Aeson (Value(..), object, (.=))
+import Protolude hiding (get)
 
 import TypeSafeWS.Server
 import TypeSafeWS.DataTypes

@@ -3,6 +3,7 @@ module TypeSafeWS.Config where
 import Data.Configurator
 import Data.Configurator.Types
 import Control.Monad.Trans.Reader
+import Protolude
 
 import TypeSafeWS.ConfigTypes
 

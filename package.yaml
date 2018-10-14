@@ -37,11 +37,13 @@ dependencies:
 - resource-pool
 - githash
 - containers
+- protolude
 
 library:
   source-dirs: src/lib
   default-extensions:  OverloadedStrings
                      , RecordWildCards
+                     , NoImplicitPrelude
 
 executables:
   type-safe-ws-exe:
@@ -49,6 +51,7 @@ executables:
     source-dirs:         src/app
     default-extensions:  OverloadedStrings
                        , RecordWildCards
+                       , NoImplicitPrelude
     ghc-options:
     - -threaded
     - -rtsopts
@@ -62,6 +65,7 @@ tests:
     source-dirs:         test
     default-extensions:  OverloadedStrings
                        , RecordWildCards
+                       , NoImplicitPrelude
     ghc-options:
     - -threaded
     - -rtsopts
