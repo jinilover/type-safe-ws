@@ -73,7 +73,7 @@ invalidDateRespSpec = with (createApp db) $
         |]
 
 duplicatedUserRespSpec :: Spec
-duplicatedUserRespSpec = with (createApp db {_addUser = const $ return $ Left $ UserAlreadyExisted "user already existed"}) $
+duplicatedUserRespSpec = with (createApp db {_addUser = const . return . Left . UserAlreadyExisted $ "user already existed"}) $
   describe "add user failed due to user already existed" $
     it "post /users duplicated user responds with 400" $
       request methodPost "/users" postHeader postBody `shouldRespondWith` 400

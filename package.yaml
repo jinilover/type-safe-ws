@@ -40,11 +40,15 @@ dependencies:
 
 library:
   source-dirs: src/lib
+  default-extensions:  OverloadedStrings
+                     , RecordWildCards
 
 executables:
   type-safe-ws-exe:
     main:                Main.hs
     source-dirs:         src/app
+    default-extensions:  OverloadedStrings
+                       , RecordWildCards
     ghc-options:
     - -threaded
     - -rtsopts
@@ -56,6 +60,8 @@ tests:
   type-safe-ws-test:
     main:                Spec.hs
     source-dirs:         test
+    default-extensions:  OverloadedStrings
+                       , RecordWildCards
     ghc-options:
     - -threaded
     - -rtsopts

@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE RecordWildCards #-}
 module TypeSafeWS.Apis where
 
 import GHC.Exts

@@ -30,10 +30,10 @@ addUserSpec =
       let result = addUserToMock db {_addUser = return . Right . name} in
       io result >>= (`shouldBe` Right (name albert))
     it "handled adding duplicated user" $
-      let result = addUserToMock db {_addUser = const $ return $ Left $ UserAlreadyExisted err} in
+      let result = addUserToMock db {_addUser = const . return . Left $ UserAlreadyExisted err} in
       io result >>= (`shouldBe` Left (err400 {errReasonPhrase = err}))
     it "handled invalid registrationDate" $
-      let result = addUserToMock db {_addUser = const $ return $ Left $ InvalidDate err} in
+      let result = addUserToMock db {_addUser = const . return . Left $ InvalidDate err} in
       io result >>= (`shouldBe` Left (err400 {errReasonPhrase = err}))
   where err = "sample error"
         addUserToMock = (`addUser` albert)

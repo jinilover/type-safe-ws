@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 module TypeSafeWS.DbServicesSpec where
 
 import Test.Hspec

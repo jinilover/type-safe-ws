@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 module TypeSafeWS.Server where
 
 import Servant

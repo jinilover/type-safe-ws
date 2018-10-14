@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
-
 module TypeSafeWS.DbServices where
 
 import Control.Exception.Base
@@ -39,17 +36,17 @@ createDb pool = let withConnPool = withResource pool in
 
 migrateDb :: Connection -> String -> IO ()
 migrateDb conn dir = do
-  initResult <- withTransaction conn $ runMigration $
+  initResult <- withTransaction conn . runMigration $
     MigrationContext MigrationInitialization True conn
   print $ "MigrationInitialization: " ++ show initResult
-  migrateResult <- withTransaction conn $ runMigration $
+  migrateResult <- withTransaction conn . runMigration $
     MigrationContext (MigrationDirectory dir) True conn
   print $ "Migration result: " ++ show migrateResult
 
 addUser :: Connection -> User -> IO (Either AddUserError String)
 addUser conn user@User{..} = insertUser (parseDay $ BS8.pack registrationDate)
   where insertUser :: Either String Day -> IO (Either AddUserError String)
-        insertUser (Left parseErr) = return $ Left $ InvalidDate $ parseErr ++ " from date " ++ registrationDate
+        insertUser (Left parsedErr) = return . Left . InvalidDate $ parsedErr ++ " from date " ++ registrationDate
         insertUser (Right date) =
           let addUserIO = const (Right $ "User " ++ name ++ " created")
                           <$> execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date) in
@@ -58,7 +55,7 @@ addUser conn user@User{..} = insertUser (parseDay $ BS8.pack registrationDate)
         handleError (SomeException e) =
           let errMsg = displayException e in
           if "duplicate key value" `isInfixOf` errMsg
-              then return $ Left $ UserAlreadyExisted errMsg
+              then return . Left $ UserAlreadyExisted errMsg
               else throwIO e
 
 listAllUsers :: Connection -> IO [User]
