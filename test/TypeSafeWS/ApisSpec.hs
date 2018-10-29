@@ -4,7 +4,6 @@ module TypeSafeWS.ApisSpec
 import Test.Hspec
 
 import Protolude
-import Control.Monad.Trans.Except
 import Servant
 
 import TypeSafeWS.DataTypes
