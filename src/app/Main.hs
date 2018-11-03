@@ -15,9 +15,10 @@ import TypeSafeWS.Server
 
 main :: IO ()
 main = do
-  AppConfig{..} <- loadAppConfig
+  args <- getArgs
+  AppConfig{..} <- loadAppConfig args
   pool <- DbServices.initConnPool dbConfig
-  withResource pool (`DbServices.migrateDb` dbscriptsDir)
+  withResource pool (`DbServices.migrateDb` args)
   run appPort $ app pool
 
 app :: Pool Connection -> Application

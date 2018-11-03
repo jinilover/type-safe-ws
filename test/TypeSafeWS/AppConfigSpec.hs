@@ -12,10 +12,9 @@ loadAppConfigSpec :: Spec
 loadAppConfigSpec =
   describe "AppConfig spec" $
     it "load AppConfig successfully/correctly" $
-       loadAppConfig >>= (`shouldBe`
+       loadAppConfig [] >>= (`shouldBe`
          AppConfig {
             appPort = 9001,
-            dbscriptsDir = "src/resources/dbscripts",
             dbConfig = DbConfig {
               dbHost = "localhost",
               dbName = "postgres",

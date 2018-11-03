@@ -4,13 +4,16 @@ import Data.Configurator
 import Data.Configurator.Types
 import Control.Monad.Trans.Reader
 import Protolude
+import Prelude (String)
 
 import TypeSafeWS.ConfigTypes
+import TypeSafeWS.Utils
 
-loadAppConfig :: IO AppConfig
-loadAppConfig = load [Required "src/resources/appl.cfg"] >>= runReaderT appReaderT
-  where appReaderT = AppConfig <$> fieldReaderT "AppConfig.appPort"
-                               <*> fieldReaderT "AppConfig.dbscriptsDir"
+loadAppConfig :: [String] -> IO AppConfig
+loadAppConfig = loadWholeConfig . resourceFolder
+  where loadWholeConfig folder =
+          load [Required $ folder ++ "appl.cfg"] >>= runReaderT appReaderT
+        appReaderT = AppConfig <$> fieldReaderT "AppConfig.appPort"
                                <*> dbReaderT
         dbReaderT = DbConfig <$> fieldReaderT "AppConfig.DbConfig.dbHost"
                              <*> fieldReaderT "AppConfig.DbConfig.dbName"

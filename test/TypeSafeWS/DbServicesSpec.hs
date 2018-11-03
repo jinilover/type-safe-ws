@@ -14,6 +14,7 @@ import TypeSafeWS.DbServices
 import TypeSafeWS.Config
 import TypeSafeWS.ConfigTypes
 import TypeSafeWS.DataTypes
+import TypeSafeWS.Utils
 
 usersSpec :: Spec
 usersSpec = beforeAll setup $
@@ -54,11 +55,11 @@ usersSpec = beforeAll setup $
 
 setup :: IO ()
 setup = do
-  AppConfig{..} <- loadAppConfig
-  getConnPool >>= (`withResource` (\c -> migrateDb c dbscriptsDir >> cleanupTables c))
+  AppConfig{..} <- loadAppConfig []
+  getConnPool >>= (`withResource` (\c -> migrateDb c [] >> cleanupTables c))
 
 getConnPool :: IO (Pool Connection)
-getConnPool = loadAppConfig >>= initConnPool . dbConfig
+getConnPool = loadAppConfig [] >>= initConnPool . dbConfig
 
 cleanupTables :: Connection -> IO ()
 cleanupTables conn = void $ execute_ conn "DELETE FROM users"

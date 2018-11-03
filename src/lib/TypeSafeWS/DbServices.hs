@@ -16,6 +16,7 @@ import qualified Data.ByteString.Char8 as BS8
 import TypeSafeWS.ConfigTypes
 import TypeSafeWS.DataTypes
 import TypeSafeWS.Config
+import TypeSafeWS.Utils
 
 initConnPool :: DbConfig -> IO (Pool Connection)
 initConnPool DbConfig{..} =
@@ -36,8 +37,9 @@ createDb pool = let withConnPool = withResource pool in
   , _deleteUser = withConnPool . flip deleteUser
   }
 
-migrateDb :: Connection -> String -> IO ()
-migrateDb conn dir = do
+migrateDb :: Connection -> [String] -> IO ()
+migrateDb conn xs = let dir = resourceFolder xs ++ "dbscripts" in
+  do
   initResult <- withTransaction conn . runMigration $
     MigrationContext MigrationInitialization True conn
   print $ "MigrationInitialization: " ++ show initResult
