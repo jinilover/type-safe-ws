@@ -86,13 +86,12 @@ Json response will be something like
 ## Setup environment
 
 ### Install PostgreSql
-For the requirement in compiling the code using PostgreSql-simple,
-`brew install postgresql` for mac
+For the requirement in compiling the code using PostgreSql-simple, it has to install `libpq-dev`.  It is because `pg_config` program is required, http://www.lambda-land.com/posts/2017-11-16-postgresql-simple
 
 ### Install PostgreSql db docker container
 `docker pull postgres:latest`
 
-`docker run --name type-safe-ws-db -p 5445:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -d postgres`
+`docker run --name type-safe-ws-db -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -d postgres`
 
 ### Build and start the application
 `stack build`
@@ -101,3 +100,15 @@ For the requirement in compiling the code using PostgreSql-simple,
 
 ### For unit-test
 `stack build type-safe-ws\:test\:type-safe-ws-test`
+
+## Deploy application to Docker container
+
+### Build Docker image
+`docker build -t jinilover/type-safe-ws:latest .`
+
+### Run Docker image
+`docker run -dit --name type-safe-ws --network host jinilover/type-safe-ws:latest`
+
+## References
+* https://futtetennismo.me/posts/docker/2017-11-24-docker-haskell-executables.html
+* https://www.fpcomplete.com/blog/2017/12/building-haskell-apps-with-docker
