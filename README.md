@@ -91,7 +91,7 @@ For the requirement in compiling the code using PostgreSql-simple, it has to ins
 ### Install PostgreSql db docker container
 `docker pull postgres:latest`
 
-`docker run --name type-safe-ws-db -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -d postgres`
+`docker run --name type-safe-ws-db -p 5445:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -d postgres`
 
 ### Build and start the application
 `stack build`
@@ -107,7 +107,16 @@ For the requirement in compiling the code using PostgreSql-simple, it has to ins
 `docker build -t jinilover/type-safe-ws:latest .`
 
 ### Run Docker image
-`docker run -dit --name type-safe-ws --network host jinilover/type-safe-ws:latest`
+```
+docker run -dit --name type-safe-ws --network host \
+-e DB_HOST=localhost \
+-e DB_NAME=postgres \
+-e DB_USER=postgres \
+-e DB_PASSWORD=password \
+-e DB_PORT=5445 \
+-e RESRC_LOC=/opt/resources \
+jinilover/type-safe-ws:latest
+```
 
 ## References
 * https://futtetennismo.me/posts/docker/2017-11-24-docker-haskell-executables.html

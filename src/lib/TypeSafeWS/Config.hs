@@ -12,7 +12,7 @@ import TypeSafeWS.Utils
 loadAppConfig :: [String] -> IO AppConfig
 loadAppConfig = loadWholeConfig . resourceFolder
   where loadWholeConfig folder =
-          load [Required $ folder ++ "appl.cfg"] >>= runReaderT appReaderT
+          load [Required $ folder ++ "/appl.cfg"] >>= runReaderT appReaderT
         appReaderT = AppConfig <$> fieldReaderT "AppConfig.appPort"
                                <*> dbReaderT
         dbReaderT = DbConfig <$> fieldReaderT "AppConfig.DbConfig.dbHost"

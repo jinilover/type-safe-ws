@@ -1,4 +1,5 @@
 FROM haskell:8.0.2 as builder
+ARG BUILD_LOC=/opt/build
 
 # Install dependecies needed to compile Haskell libraries
 RUN apt-get update && apt-get install -y \
@@ -6,31 +7,34 @@ RUN apt-get update && apt-get install -y \
     xz-utils \
     make
 
-WORKDIR /opt/build
+WORKDIR ${BUILD_LOC}
 
 COPY . .
 
-#RUN echo Y | apt install postgresql-server-dev-all
-
 RUN stack build && \
-    strip /opt/build/.stack-work/install/x86_64-linux/lts-9.21/8.0.2/bin/type-safe-ws-exe
+    strip ${BUILD_LOC}/.stack-work/install/x86_64-linux/lts-9.21/8.0.2/bin/type-safe-ws-exe
 
-#FROM fpco/haskell-scratch:integer-gmp
 FROM ubuntu:16.04
-
-WORKDIR /opt/bin
+ARG RESRC_LOC=/opt/resources
+ARG BUILD_LOC=/opt/build
+ARG BIN_LOC=/opt/bin
 
 RUN apt-get update && apt-get install -y \
-  ca-certificates \
   libpq-dev \
-  libgmp-dev
+  libgmp-dev \
+  curl \
+  git
 
-COPY --from=builder /opt/build/.stack-work/install/x86_64-linux/lts-9.21/8.0.2/bin/type-safe-ws-exe .
+RUN mkdir -p ${RESRC_LOC}
+RUN mkdir -p ${BIN_LOC}/.git
 
-RUN mkdir -p /opt/resources
+WORKDIR ${BIN_LOC}
 
-COPY --from=builder /opt/build/src/resources /opt/resources
+COPY --from=builder ${BUILD_LOC}/.stack-work/install/x86_64-linux/lts-9.21/8.0.2/bin/type-safe-ws-exe .
+COPY --from=builder ${BUILD_LOC}/.git ./.git
+COPY --from=builder ${BUILD_LOC}/src/resources ${RESRC_LOC}
 
 EXPOSE 9001
 
-ENTRYPOINT ["/opt/bin/type-safe-ws-exe", "/opt/resources/"]
+# -e RESRC_LOC=something must be passed in `docker run` because ARG is only for `docker build`
+ENTRYPOINT ./type-safe-ws-exe ${RESRC_LOC}

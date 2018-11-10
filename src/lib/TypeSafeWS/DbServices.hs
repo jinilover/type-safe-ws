@@ -25,8 +25,7 @@ initConnPool DbConfig{..} =
             "' dbname='" ++ dbName ++
             "' user='" ++ user ++
             "' password='" ++ password ++
-            "' port=" ++
-            show dbPort in
+            "' port=" ++ dbPort in
       createPool (connectPostgreSQL url) close noOfStripes (realToFrac idleTime) stripeSize
 
 createDb :: Pool Connection -> Db
@@ -38,7 +37,7 @@ createDb pool = let withConnPool = withResource pool in
   }
 
 migrateDb :: Connection -> [String] -> IO ()
-migrateDb conn xs = let dir = resourceFolder xs ++ "dbscripts" in
+migrateDb conn xs = let dir = resourceFolder xs ++ "/dbscripts" in
   do
   initResult <- withTransaction conn . runMigration $
     MigrationContext MigrationInitialization True conn

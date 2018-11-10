@@ -4,5 +4,5 @@ module TypeSafeWS.Utils
 import Prelude (String)
 
 resourceFolder :: [String] -> String
-resourceFolder [] = "src/resources/"
+resourceFolder [] = "src/resources"
 resourceFolder (folder : _) = folder

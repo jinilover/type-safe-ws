@@ -11,7 +11,7 @@ data DbConfig = DbConfig { dbHost :: String
                          , dbName :: String
                          , user :: String
                          , password :: String
-                         , dbPort :: Int
+                         , dbPort :: String
                          , noOfStripes :: Int
                          , idleTime :: Int
                          , stripeSize :: Int
