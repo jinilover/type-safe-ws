@@ -1,6 +1,6 @@
 # REST service in pure FP
 
-A poc that demonstrates how to use Haskell and PostgreSql to implement a microservice.  It provides the functionality of access a database.
+Demonstrates how to use Haskell and PostgreSql to implement a microservice running inside a docker container.  It provides the functionality of access a database.
 
 ## Tools
 * Haskell-servant
@@ -117,6 +117,10 @@ docker run -dit --name type-safe-ws --network host \
 -e RESRC_LOC=/opt/resources \
 jinilover/type-safe-ws:latest
 ```
+### Publish to docker hub
+`docker login --username=jinilover`
+
+`docker push jinilover/type-safe-ws:latest`
 
 ## References
 * https://futtetennismo.me/posts/docker/2017-11-24-docker-haskell-executables.html
