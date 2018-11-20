@@ -17,22 +17,25 @@ import TypeSafeWS.DataTypes
 
 sortUsers :: Db -> Maybe SortBy -> Handler [User]
 sortUsers Db{..} = liftIO . (<$> _listAllUsers) . sortBy
-  where sortBy Nothing = identity
-        sortBy (Just Age) = sortWith age
-        sortBy _ = sortWith name
+  where
+    sortBy Nothing = identity
+    sortBy (Just Age) = sortWith age
+    sortBy _ = sortWith name
 
 addUser :: Db -> User -> Handler String
 addUser Db{..} = (>>= toHttpResponse) . liftIO . _addUser
-  where toHttpResponse (Right msg) = return msg
-        toHttpResponse (Left err) = throwError err400 {errReasonPhrase = msg err}
+  where
+    toHttpResponse (Right msg) = return msg
+    toHttpResponse (Left err) = throwError err400 {errReasonPhrase = msg err}
 
 deleteUser :: Db -> String -> Handler String
 deleteUser Db{..} = (>>= toHttpResponse) . liftIO . _deleteUser
-  where toHttpResponse 0 = throwError err400 { errReasonPhrase = "user name not exists" }
-        toHttpResponse _ = return "user removed"
+  where
+    toHttpResponse 0 = throwError err400 { errReasonPhrase = "user name not exists" }
+    toHttpResponse _ = return "user removed"
 
 getServiceInfo :: Handler ServiceInfo
 getServiceInfo = liftIO (getGitInfo ".") >>= toHttpResponse
-  where toHttpResponse (Right gi) =
-          return $ ServiceInfo (giHash gi) (giBranch gi) (giCommitDate gi) (giCommitMessage gi)
-        toHttpResponse (Left err) = throwError err500 {errReasonPhrase = show err}
+  where
+    toHttpResponse (Right gi) = return $ ServiceInfo (giHash gi) (giBranch gi) (giCommitDate gi) (giCommitMessage gi)
+    toHttpResponse (Left err) = throwError err500 {errReasonPhrase = show err}

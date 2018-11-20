@@ -9,12 +9,11 @@ import TypeSafeWS.ApiTypes
 import TypeSafeWS.Apis
 
 server :: Db -> Server RestAPI
-server db =
-  return "Welcome to microservice in pure FP"
-  :<|> getServiceInfo
-  :<|> sortUsers db
-  :<|> addUser db
-  :<|> deleteUser db
+server db = return "Welcome to microservice in pure FP"
+              :<|> getServiceInfo
+              :<|> sortUsers db
+              :<|> addUser db
+              :<|> deleteUser db
 
 serviceApi :: Proxy RestAPI
 serviceApi = Proxy
