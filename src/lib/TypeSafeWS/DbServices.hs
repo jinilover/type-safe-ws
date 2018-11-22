@@ -52,19 +52,17 @@ migrateDb conn xs =
 addUser :: Connection -> User -> IO (Either AddUserError String)
 addUser conn user@User{..} = insertUser . parseDay . BS8.pack $ registrationDate
   where
-    insertUser :: Either String Day -> IO (Either AddUserError String)
     insertUser (Left parsedErr) = return . Left . InvalidDate $ parsedErr ++ " from date " ++ registrationDate
     insertUser (Right date) = catch addUserIO handleError
       where
         addUserIO = const (Right $ "User " ++ name ++ " created")
                     <$> execute conn "INSERT INTO users VALUES (?, ?, ?, ?)" (name, age, email, date)
 
-        handleError :: SomeException -> IO (Either AddUserError String)
-        handleError (SomeException e) = if "duplicate key value" `isInfixOf` errMsg
-                                        then return . Left $ UserAlreadyExisted errMsg
-                                        else throwIO e
-          where
-            errMsg = displayException e
+        handleError (SomeException e) =
+          let errMsg = displayException e in
+          if "duplicate key value" `isInfixOf` errMsg
+            then return . Left $ UserAlreadyExisted errMsg
+            else throwIO e
 
 listAllUsers :: Connection -> IO [User]
 listAllUsers conn = map toUser <$> query_ conn sql

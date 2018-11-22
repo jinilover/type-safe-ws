@@ -19,10 +19,10 @@ data ServiceInfo = ServiceInfo {
 instance ToJSON ServiceInfo
 
 data User = User {
-  name :: String,
-  age :: Int,
-  email :: String,
-  registrationDate :: String
+  name :: String
+, age :: Int
+, email :: String
+, registrationDate :: String
 } deriving (Show, Generic, Eq)
 
 instance ToJSON User

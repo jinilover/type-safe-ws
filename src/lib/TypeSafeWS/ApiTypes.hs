@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE DataKinds
+           , TypeOperators #-}
 
 module TypeSafeWS.ApiTypes where
 
