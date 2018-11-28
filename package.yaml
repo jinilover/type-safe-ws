@@ -56,6 +56,11 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -Wall
+    - -fno-warn-unused-binds
+    - -fno-warn-unused-do-bind
+    - -fno-warn-unused-imports
+    - -fno-warn-type-defaults
     dependencies:
     - type-safe-ws
 
@@ -70,6 +75,11 @@ tests:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -Wall
+    - -fno-warn-unused-binds
+    - -fno-warn-unused-do-bind
+    - -fno-warn-unused-imports
+    - -fno-warn-type-defaults
     dependencies:
     - hspec
     - hspec-wai

@@ -68,7 +68,7 @@ listAllUsers :: Connection -> IO [User]
 listAllUsers conn = map toUser <$> query_ conn sql
   where
     toUser :: (String, Int, String, Day) -> User
-    toUser (name, age, email, date) = User name age email (show date)
+    toUser (name, age, email, date) = let registrationDate = show date in User{..}
 
     sql = "SELECT user_name, age, email, registration_date FROM users"
 
