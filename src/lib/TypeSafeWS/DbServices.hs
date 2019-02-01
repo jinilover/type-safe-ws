@@ -50,7 +50,7 @@ migrateDb conn xs =
     dir = resourceFolder xs ++ "/dbscripts"
 
 addUser :: Connection -> User -> IO (Either AddUserError String)
-addUser conn user@User{..} = insertUser . parseDay . BS8.pack $ registrationDate
+addUser conn User{..} = insertUser . parseDay . BS8.pack $ registrationDate
   where
     insertUser (Left parsedErr) = return . Left . InvalidDate $ parsedErr ++ " from date " ++ registrationDate
     insertUser (Right date) = catch addUserIO handleError
