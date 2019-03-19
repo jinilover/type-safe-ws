@@ -8,7 +8,7 @@ import Control.Exception.Base
 import System.IO.Error
 import Data.Int (Int64)
 import GitHash
-import Protolude hiding (msg)
+import Protolude
 import Prelude (String)
 import qualified Data.ByteString.Char8 as BS8
 
